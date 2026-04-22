@@ -1,0 +1,94 @@
+/* =============================================================
+   Blauw Films — Rich Text Before/After Compare Slider
+   ------------------------------------------------------------
+   Minimalist before/after image slider for Webflow Rich Text.
+   Pair two images by adding matching alt-text identifiers:
+     compare:groupId:before  Optional alt caption
+     compare:groupId:after   Optional alt caption
+   ============================================================= */
+
+.bf-compare {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;           /* kill inline-image whitespace gaps */
+  touch-action: none;        /* prevent page-scroll during drag on touch */
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: ew-resize;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Both images. pointer-events:none is critical —
+   it means Blauw Zoom's click listeners on these <img> tags
+   never receive events. Clicks go to the wrapper instead. */
+.bf-compare img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* The "before" image establishes the container's natural aspect ratio. */
+.bf-compare-before {
+  position: relative;
+  z-index: 1;
+}
+
+/* The "after" image is overlaid and revealed via clip-path.
+   object-fit:cover guards against minor dimension mismatches. */
+.bf-compare-after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  clip-path: inset(0 0 0 50%);
+  z-index: 2;
+}
+
+/* Thin vertical divider line, 50% grey. */
+.bf-compare-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  margin-left: -0.5px;
+  background: #808080;
+  z-index: 3;
+  outline: none;
+  /* divider itself doesn't capture pointer events —
+     the wrapper does all pointer handling. Divider is
+     focusable for keyboard control only. */
+}
+
+/* Handle: small rectangle, #1a1a1a fill, 1px #dadada outline. */
+.bf-compare-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 28px;
+  background: #1a1a1a;
+  border: 1px solid #dadada;
+  box-sizing: border-box;
+  pointer-events: none;       /* decorative only */
+}
+
+/* Keyboard focus state — subtle but clearly visible. */
+.bf-compare-divider:focus-visible .bf-compare-handle {
+  outline: 1px solid #dadada;
+  outline-offset: 2px;
+}
+
+/* Prevent the browser's default image context/callout on long-press. */
+.bf-compare img {
+  -webkit-touch-callout: none;
+}
